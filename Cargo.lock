@@ -737,9 +737,9 @@ dependencies = [
 
 [[package]]
 name = "gtfs-structures"
-version = "0.34.0"
+version = "0.36.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0b5230a38084e57f3aa65ecd6d78f5e76c105389f11a3df518d33249d488bf94"
+checksum = "bf52f20cd24589877ba65e8a6285a365e43dcd7801d9ecfd70d0870fa35f9259"
 dependencies = [
  "bytes",
  "chrono",
