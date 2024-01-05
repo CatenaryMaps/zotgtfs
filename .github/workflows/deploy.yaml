@@ -1,15 +1,15 @@
 name: Deploy on Successful Build
 
 on:
-  workflow_run:
-    workflows: ["Rust"]
-    types:
-      - completed
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
+      - uses: actions/checkout@v3
+
       - name: Setup Cloudflared
         run: |
           curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
@@ -32,5 +32,5 @@ jobs:
 
       - name: SSH
         run: |
-          ssh runner@sshtransit03.catenarymaps.org "echo '${{ secrets.SUDO_PASSWD }}' | sudo -S bash -c 'chown -R lolpro11 /opt/zotgtfs; rm /opt/zotgtfs/Cargo.lock'; echo '${{ secrets.SUDO_PASSWD }}' | sudo -S -u lolpro11 bash -c 'cd /opt/zotgtfs; git pull; cargo build --release'; echo '${{ secrets.SUDO_PASSWD }}' | sudo -S systemctl restart kactusingest.service kactuslacmta.service kactusmetrolink.service kactusmtarail.service kactuspublic.service kactusserver.service zotgtfsrt.service"
+          ssh runner@sshtransit03.catenarymaps.org "echo '${{ secrets.SUDO_PASSWD }}' | sudo -S bash -c 'chown -R lolpro11 /opt/zotgtfs; rm /opt/zotgtfs/Cargo.lock'; echo '${{ secrets.SUDO_PASSWD }}' | sudo -S -u lolpro11 bash -c 'cd /opt/zotgtfs; git pull; cargo clean --verbose; cargo build --release --verbose'; echo '${{ secrets.SUDO_PASSWD }}' | sudo -S systemctl restart kactusingest.service kactuslacmta.service kactusmetrolink.service kactusmtarail.service kactuspublic.service kactusserver.service zotgtfsrt.service kactusdoublemap.service kactusamtrak.service"
         shell: bash
